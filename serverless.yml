@@ -1,0 +1,63 @@
+service: dio-reservas
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: "20201221"
+  region: us-east-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+          Resource:
+            - arn:aws:dynamodb:us-east-1:105160446568:table/ReservationTable
+
+functions:
+  createReservation:
+    handler: src/create-reservation.handler
+    events:
+      - http:
+          path: /reservation
+          method: post
+  fetchAllReservation:
+    handler: src/fetch-all-reservations.handler
+    events:
+      - http:
+          path: /reservations
+          method: get
+  chooseStatus:
+    handler: src/choose-status-reservation.handler
+    events:
+      - http:
+          path: /reservation/{id}
+          method: put
+
+resources:
+  Resources:
+    ReservationTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ReservationTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+plugins:
+  # plus to serverless work offile
+  - serverless-offline
+
+custom:
+  # This is necessary because the docker to use this host
+  serverless-offline:
+    host: 0.0.0.0            
