@@ -31,7 +31,7 @@ Host: http://localhost:3000/dev
 
 - Altera o status de uma reserva
 - **PUT:** /reservation/{id}
-  - **Payload:** `{ "status": "CONFIRMED"} // Possiveis status: CANCELLED, CONFIRMED, COMPLETED
+  - **Payload:** `{ "status": "CONFIRMED"} // Possiveis status: CANCELLED, CONFIRMED, COMPLETED`
 
 
 ### Tecnologias
